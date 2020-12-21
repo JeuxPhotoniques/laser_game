@@ -89,12 +89,12 @@ def main():
     while running:
         tick = clock.tick(FPS)  # Limit the framerate to FPS
 
-        # DRAW GAME OBJECTS
-        screen.fill((0, 0, 0))  # Fill entire screen.
+        # DRAW GAME OBJECTS  # Fill entire screen.
 
         for x in target_objects + animated_objects:
             x.update(obstacle_objects + player_objects + target_objects)
 
+        screen.fill((0, 0, 0))
         for x in animated_objects + obstacle_objects + player_objects + target_objects:
             x.draw(screen)
 
