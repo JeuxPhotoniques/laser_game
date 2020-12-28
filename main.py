@@ -30,10 +30,8 @@ pygame.init()
 def init_display(WIDTH, HEIGHT):
     global screen, background
     SIZE = WIDTH, HEIGHT
-    if WIDTH <= 800:
-        screen = pygame.display.set_mode(SIZE)
-    if WIDTH > 800:
-        screen = pygame.display.set_mode(SIZE, pygame.FULLSCREEN)
+    # screen = pygame.display.set_mode(SIZE)
+    screen = pygame.display.set_mode(SIZE, pygame.FULLSCREEN)
     background = screen.copy()
     background.fill((0, 0, 0, 0))
     screen.blit(background, (0, 0))
@@ -145,9 +143,8 @@ def draw_score(screen, count):
 
 
 def show_level(screen, level, score):
-    start = time.time()
-    while True:
-        now = time.time()
+    running = True
+    while running:
         screen.fill((0, 0, 0))
         font = pygame.font.SysFont(None, 100)
         text = font.render(f"Level {level}", True, WHITE)
@@ -155,9 +152,13 @@ def show_level(screen, level, score):
         font = pygame.font.SysFont(None, 75)
         text = font.render(f"Score {score}", True, WHITE)
         screen.blit(text, (310, 260))
+        font = pygame.font.SysFont(None, 50)
+        text = font.render("appuyer sur espace", True, WHITE)
+        screen.blit(text, (240, 330))
         pygame.display.update()
-        if now - start > 3:
-            break
+        for event in pygame.event.get():
+            if pygame.key.get_pressed()[pygame.K_SPACE]:
+                running = False
 
 
 def show_end(screen, score, time_total):
@@ -165,16 +166,14 @@ def show_end(screen, score, time_total):
     while running:
         screen.fill((0, 0, 0))
         font = pygame.font.SysFont(None, 100)
-        text = font.render(f"Score {score}", True, WHITE)
-        screen.blit(text, (280, 190))
-        font = pygame.font.SysFont(None, 75)
-        text = font.render(f"Temps {time_total}", True, WHITE)
-        screen.blit(text, (300, 260))
+        text = font.render(f"Score final:  {score}", True, WHITE)
+        screen.blit(text, (210, 190))
+        font = pygame.font.SysFont(None, 50)
+        text = font.render(f"Temps restant:  {time_total}", True, WHITE)
+        screen.blit(text, (260, 260))
         pygame.display.update()
-
         for event in pygame.event.get():
-            if event.type == pygame.QUIT or pygame.key.get_pressed()[pygame.K_ESCAPE] \
-                    or pygame.key.get_pressed()[pygame.K_RETURN]:
+            if pygame.key.get_pressed()[pygame.K_SPACE] or pygame.key.get_pressed()[pygame.K_ESCAPE]:
                 running = False
 
 
@@ -186,13 +185,11 @@ def show_start(screen):
         text = font.render(f"Jeux de lasers", True, WHITE)
         screen.blit(text, (160, 190))
         font = pygame.font.SysFont(None, 50)
-        text = font.render(f"appuyer sur enter", True, WHITE)
+        text = font.render(f"appuyer sur espace", True, WHITE)
         screen.blit(text, (240, 260))
         pygame.display.update()
-
         for event in pygame.event.get():
-            if event.type == pygame.QUIT or pygame.key.get_pressed()[pygame.K_ESCAPE] \
-                    or pygame.key.get_pressed()[pygame.K_RETURN]:
+            if pygame.key.get_pressed()[pygame.K_SPACE]:
                 running = False
 
 
@@ -202,7 +199,8 @@ def main():
     level_time = 60
     score_total = 0
     time_total = 0
-    level_list = [first_level(), second_level(), third_level(), fourth_level()]
+    show_level(screen, level_number + 1, score_total)
+    level_list = [first_level(), second_level(), fourth_level(), third_level()]
     laser_objects, obstacle_objects, target_objects, player_objects = level_list[level_number]
     timer = Timer(level_time)
 
@@ -241,7 +239,7 @@ def main():
                 time_total += timer.seconde
                 level_number += 1
                 if level_number < len(level_list):
-                    show_level(screen, level_number, score_total)
+                    show_level(screen, level_number + 1, score_total)
                     laser_objects, obstacle_objects, target_objects, player_objects = level_list[level_number]
                     timer = Timer(level_time)
                 else:
