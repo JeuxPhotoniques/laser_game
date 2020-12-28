@@ -6,21 +6,29 @@ import formula
 
 
 class Player:
-    def __init__(self, x, y, color):
-        self.rotate_right = pygame.K_m
-        self.rotate_left = pygame.K_n
-        self.left = pygame.K_LEFT
-        self.right = pygame.K_RIGHT
-        self.up = pygame.K_UP
-        self.down = pygame.K_DOWN
+    def __init__(self, x, y, color, angle=-90, player2=False):
+        if player2:
+            self.up = pygame.K_w
+            self.down = pygame.K_s
+            self.left = pygame.K_a
+            self.right = pygame.K_d
+            self.rotate_left = pygame.K_q
+            self.rotate_right = pygame.K_e
+        else:
+            self.rotate_right = pygame.K_m
+            self.rotate_left = pygame.K_n
+            self.left = pygame.K_LEFT
+            self.right = pygame.K_RIGHT
+            self.up = pygame.K_UP
+            self.down = pygame.K_DOWN
+
         self.color = color
-        self.lines = []
 
         self.x = x
         self.y = y
 
         self.size = 20
-        self.theta = radians(-90)
+        self.theta = radians(angle)
 
         self.c = None
         self.b = None
@@ -48,7 +56,7 @@ class Player:
         key = pygame.key.get_pressed()
 
         dist = 2 * tick / 30
-        rot = 2 * pi / 500 * tick / 30
+        rot = 2 * pi / 1000 * tick / 30
 
         direction = Vector2(0, 0)
         if key[self.down]:

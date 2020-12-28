@@ -15,7 +15,7 @@ class Laser:
     def update(self, obstacles):
         self.lines = [self.position]
         current_direction = self.direction
-        for _ in range(20):
+        for _ in range(30):
             # TODO::new line detection
             line = [self.lines[-1] + current_direction * 2, self.lines[-1] + current_direction * self.length]
             collision_list = []

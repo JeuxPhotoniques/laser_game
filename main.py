@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+import time
+
 import formula
 
 import pygame
@@ -6,11 +8,12 @@ import pygame
 # how many pixels should an object move on each tick?
 from pygame.math import Vector2
 
+from timer import Timer
 from laser import Laser
 from obstacle import Obstacle
 from target import Target
 from player import Player
-from timer import Timer
+from chrono import Chrono
 
 ANIM_SPEED = 1
 # limit frame rate to FPS with clock.tick(FPS) in your main loop.
@@ -40,7 +43,7 @@ init_display(800, 600)
 
 
 def first_level():
-    animated_objects = []
+    laser_objects = []
     obstacle_objects = []
     target_objects = []
     player_objects = []
@@ -53,36 +56,155 @@ def first_level():
     for x, y in list_target:
         target_objects.append(Target((x, y)))
 
-    player_objects.append(Player(40, 400, (255, 230, 0)))
-    player_objects.append(Player(100, 400, (255, 102, 178)))
+    player_objects.append(Player(100, 400, (255, 230, 0)))
+    player_objects.append(Player(40, 400, (255, 102, 178), player2=True))
 
-    p = player_objects[1]
-    p.up = pygame.K_w
-    p.down = pygame.K_s
-    p.left = pygame.K_a
-    p.right = pygame.K_d
-    p.rotate_left = pygame.K_q
-    p.rotate_right = pygame.K_e
+    laser_objects.append(Laser(Vector2(-10, 500), Vector2(1, 0)))
 
-    animated_objects.append(Laser(Vector2(-10, 500), Vector2(1, 0)))
+    return laser_objects, obstacle_objects, target_objects, player_objects
 
-    return animated_objects, obstacle_objects, target_objects, player_objects
+
+def second_level():
+    laser_objects = []
+    obstacle_objects = []
+    target_objects = []
+    player_objects = []
+
+    obstacle_objects.append(Obstacle(((350, 100), (450, 100), (450, 500), (350, 500))))
+    obstacle_objects.append(Obstacle(((150, 250), (650, 250), (650, 350), (150, 350))))
+
+    laser_objects.append(Laser(Vector2(110, -10), Vector2(0, 1)))
+    laser_objects.append(Laser(Vector2(690, 610), Vector2(0, -1)))
+
+    list_target = [(250, 427), (325, 374), (495, 218), (558, 155), (49, 427), (734, 152),
+                   (360, 85), (440, 85), (360, 515), (440, 515)]
+    for x, y in list_target:
+        target_objects.append(Target((x, y)))
+
+    player_objects.append(Player(500, 400, (255, 230, 0)))
+    player_objects.append(Player(300, 200, (255, 102, 178), player2=True))
+
+    return laser_objects, obstacle_objects, target_objects, player_objects
+
+
+def third_level():
+    laser_objects = []
+    obstacle_objects = []
+    target_objects = []
+    player_objects = []
+
+    obstacle_objects.append(Obstacle(((0, 0), (0, 10), (800, 10), (800, 0)), reflect=True))
+    obstacle_objects.append(Obstacle(((0, 600), (0, 590), (800, 590), (800, 600)), reflect=True))
+
+    obstacle_objects.append(Obstacle(((245, 120), (290, 120), (290, 180), (245, 180))))
+    obstacle_objects.append(Obstacle(((595, 400), (595, 450), (645, 450), (645, 400))))
+
+    laser_objects.append(Laser(Vector2(-10, 300), Vector2(1, -3)))
+
+    list_target = [(220, 145), (320, 145), (212, 516),
+                   (555, 420), (685, 420)]
+    for x, y in list_target:
+        target_objects.append(Target((x, y)))
+
+    player_objects.append(Player(480, 350, (255, 230, 0)))
+    player_objects.append(Player(280, 280, (255, 102, 178), player2=True))
+
+    return laser_objects, obstacle_objects, target_objects, player_objects
+
+
+def fourth_level():
+    laser_objects = []
+    obstacle_objects = []
+    target_objects = []
+    player_objects = []
+
+    obstacle_objects.append(Obstacle(((30, 0), (400, 290), (770, 0)), reflect=True))
+    obstacle_objects.append(Obstacle(((30, 600), (400, 310), (770, 600)), reflect=True))
+
+    laser_objects.append(Laser(Vector2(25, -10), Vector2(0, 1)))
+    laser_objects.append(Laser(Vector2(775, -10), Vector2(0, 1)))
+
+    list_target = [(710, 140), (710, 450), (625, 300),
+                   (90, 260), (90, 325), (225, 295), ]
+    for x, y in list_target:
+        target_objects.append(Target((x, y)))
+
+    player_objects.append(Player(480, 300, (255, 230, 0)))
+    player_objects.append(Player(320, 300, (255, 102, 178), player2=True))
+
+    return laser_objects, obstacle_objects, target_objects, player_objects
 
 
 WHITE = (255, 255, 255)
 
 
-def score(screen, count):
+def draw_score(screen, count):
     font = pygame.font.SysFont(None, 25)
     text = font.render("Score: " + str(count), True, WHITE)
     screen.blit(text, (0, 0))
 
 
+def show_level(screen, level, score):
+    start = time.time()
+    while True:
+        now = time.time()
+        screen.fill((0, 0, 0))
+        font = pygame.font.SysFont(None, 100)
+        text = font.render(f"Level {level}", True, WHITE)
+        screen.blit(text, (280, 190))
+        font = pygame.font.SysFont(None, 75)
+        text = font.render(f"Score {score}", True, WHITE)
+        screen.blit(text, (310, 260))
+        pygame.display.update()
+        if now - start > 3:
+            break
+
+
+def show_end(screen, score, time_total):
+    running = True
+    while running:
+        screen.fill((0, 0, 0))
+        font = pygame.font.SysFont(None, 100)
+        text = font.render(f"Score {score}", True, WHITE)
+        screen.blit(text, (280, 190))
+        font = pygame.font.SysFont(None, 75)
+        text = font.render(f"Temps {time_total}", True, WHITE)
+        screen.blit(text, (300, 260))
+        pygame.display.update()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT or pygame.key.get_pressed()[pygame.K_ESCAPE] \
+                    or pygame.key.get_pressed()[pygame.K_RETURN]:
+                running = False
+
+
+def show_start(screen):
+    running = True
+    while running:
+        screen.fill((0, 0, 0))
+        font = pygame.font.SysFont(None, 100)
+        text = font.render(f"Jeux de lasers", True, WHITE)
+        screen.blit(text, (160, 190))
+        font = pygame.font.SysFont(None, 50)
+        text = font.render(f"appuyer sur enter", True, WHITE)
+        screen.blit(text, (240, 260))
+        pygame.display.update()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT or pygame.key.get_pressed()[pygame.K_ESCAPE] \
+                    or pygame.key.get_pressed()[pygame.K_RETURN]:
+                running = False
+
+
 def main():
-    # create_laser()
-    # create_obstacles()
-    animated_objects, obstacle_objects, target_objects, player_objects = first_level()
-    timer = Timer()
+    show_start(screen)
+    level_number = 0
+    level_time = 60
+    score_total = 0
+    time_total = 0
+    level_list = [first_level(), second_level(), third_level(), fourth_level()]
+    laser_objects, obstacle_objects, target_objects, player_objects = level_list[level_number]
+    timer = Timer(level_time)
 
     #### Main update/draw/listen loop ####
     running = True
@@ -90,16 +212,18 @@ def main():
         tick = clock.tick(FPS)  # Limit the framerate to FPS
 
         # DRAW GAME OBJECTS  # Fill entire screen.
+        for x in target_objects:
+            x.reset_state()
 
-        for x in target_objects + animated_objects:
+        for x in laser_objects:
             x.update(obstacle_objects + player_objects + target_objects)
 
         screen.fill((0, 0, 0))
-        for x in animated_objects + obstacle_objects + player_objects + target_objects:
+        for x in laser_objects + obstacle_objects + player_objects + target_objects:
             x.draw(screen)
 
         count = sum([i.is_shot for i in target_objects])
-        score(screen, count)
+        draw_score(screen, count)
 
         timer.update(tick)
         timer.draw(screen)
@@ -112,19 +236,29 @@ def main():
             if event.type == pygame.QUIT or pygame.key.get_pressed()[pygame.K_ESCAPE]:
                 running = False
 
+            if pygame.key.get_pressed()[pygame.K_RETURN]:
+                score_total += count
+                time_total += timer.seconde
+                level_number += 1
+                if level_number < len(level_list):
+                    show_level(screen, level_number, score_total)
+                    laser_objects, obstacle_objects, target_objects, player_objects = level_list[level_number]
+                    timer = Timer(level_time)
+                else:
+                    show_end(screen, score_total, time_total)
+                    return None
+
             if event.type == pygame.MOUSEBUTTONUP:
                 pos = pygame.mouse.get_pos()
                 print(f"{pos}", end=", ")
 
-        if count > 4:
-            while running:
-                font = pygame.font.SysFont(None, 50)
-                text = font.render("Winner!", True, WHITE)
-                screen.blit(text, (350, 280))
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT or pygame.key.get_pressed()[pygame.K_ESCAPE]:
-                        running = False
-                pygame.display.update()
+        if timer.is_done():
+            score_total += count
+            time_total += level_time - timer.seconde
+            level_number += 1
+            show_level(screen, level_number, score_total)
+            laser_objects, obstacle_objects, target_objects, player_objects = level_list[level_number]
+            timer = Timer(level_time)
 
 
 if __name__ == '__main__':

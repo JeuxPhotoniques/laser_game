@@ -1,9 +1,10 @@
 import pygame
 from pygame.math import Vector2
 
+
 class Target:
     def __init__(self, position):
-        self.position = Vector2(position) - Vector2(10,10)
+        self.position = Vector2(position) - Vector2(10, 10)
         self.rectangle = pygame.Rect(*self.position, 20, 20)
         self.color_hit = (0, 205, 255)
         self.color_missed = (0, 102, 102)
@@ -19,9 +20,8 @@ class Target:
         self.is_shot = True
         return current_direction
 
-    def update(self, obstacle):
+    def reset_state(self):
         self.is_shot = False
-        return None
 
     def draw(self, screen):
         if self.is_shot:
