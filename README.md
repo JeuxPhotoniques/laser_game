@@ -1,5 +1,5 @@
 # Réflexion explosive
 
-lisez le pdf règle du jeu
+lisez le pdf regle_jeu.pdf
 
 

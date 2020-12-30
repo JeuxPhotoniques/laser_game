@@ -1,7 +1,7 @@
 import pygame
 from pygame.math import Vector2
 from copy import copy
-import formula
+from reflexionExplosive import formula
 
 
 class Laser:

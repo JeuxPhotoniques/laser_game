@@ -2,7 +2,7 @@ import pygame
 from math import cos, sin, pi, radians
 from pygame.math import Vector2
 
-import formula
+from reflexionExplosive import formula
 
 
 class Player:

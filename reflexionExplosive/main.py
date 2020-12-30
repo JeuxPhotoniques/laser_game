@@ -1,19 +1,15 @@
 #!/usr/bin/python3
-import time
-
-import formula
 
 import pygame
 
 # how many pixels should an object move on each tick?
 from pygame.math import Vector2
 
-from timer import Timer
-from laser import Laser
-from obstacle import Obstacle
-from target import Target
-from player import Player
-from chrono import Chrono
+from reflexionExplosive.timer import Timer
+from reflexionExplosive.laser import Laser
+from reflexionExplosive.obstacle import Obstacle
+from reflexionExplosive.target import Target
+from reflexionExplosive.player import Player
 
 ANIM_SPEED = 1
 # limit frame rate to FPS with clock.tick(FPS) in your main loop.
