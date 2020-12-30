@@ -26,8 +26,8 @@ pygame.init()
 def init_display(WIDTH, HEIGHT):
     global screen, background
     SIZE = WIDTH, HEIGHT
-    screen = pygame.display.set_mode(SIZE)
-    # screen = pygame.display.set_mode(SIZE, pygame.FULLSCREEN)
+    # screen = pygame.display.set_mode(SIZE)
+    screen = pygame.display.set_mode(SIZE, pygame.FULLSCREEN)
     background = screen.copy()
     background.fill((0, 0, 0, 0))
     screen.blit(background, (0, 0))
@@ -199,6 +199,7 @@ def show_start(screen):
 
 
 def main():
+    pygame.mouse.set_visible(False)
     show_start(screen)
     level_number = 0
     level_time = 75
