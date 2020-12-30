@@ -1,0 +1,1 @@
+([('main', '/Users/heros/PycharmProjects/laser_game/dist/main', 'EXECUTABLE')],)

@@ -1,1 +1,5 @@
-# laser_game
+# Réflexion explosive
+
+lisez le pdf règle du jeu
+
+

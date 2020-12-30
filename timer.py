@@ -26,6 +26,9 @@ class Timer:
     def is_done(self):
         return self.milliseconde == 0 and self.seconde == 0 and self.minute == 0
 
+    def total_seconde(self):
+        return self.seconde + 60 * self.minute
+
     def draw(self, screen):
         font = pygame.font.SysFont(None, 25)
         text = font.render(f"{self.minute:02d}:{self.seconde:02d}:{self.milliseconde % 10}", True, WHITE)

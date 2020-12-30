@@ -30,8 +30,8 @@ pygame.init()
 def init_display(WIDTH, HEIGHT):
     global screen, background
     SIZE = WIDTH, HEIGHT
-    # screen = pygame.display.set_mode(SIZE)
-    screen = pygame.display.set_mode(SIZE, pygame.FULLSCREEN)
+    screen = pygame.display.set_mode(SIZE)
+    # screen = pygame.display.set_mode(SIZE, pygame.FULLSCREEN)
     background = screen.copy()
     background.fill((0, 0, 0, 0))
     screen.blit(background, (0, 0))
@@ -147,8 +147,8 @@ def show_level(screen, level, score):
     while running:
         screen.fill((0, 0, 0))
         font = pygame.font.SysFont(None, 100)
-        text = font.render(f"Level {level}", True, WHITE)
-        screen.blit(text, (280, 190))
+        text = font.render(f"Niveau {level}", True, WHITE)
+        screen.blit(text, (260, 190))
         font = pygame.font.SysFont(None, 75)
         text = font.render(f"Score {score}", True, WHITE)
         screen.blit(text, (310, 260))
@@ -157,7 +157,7 @@ def show_level(screen, level, score):
         screen.blit(text, (240, 330))
         pygame.display.update()
         for event in pygame.event.get():
-            if pygame.key.get_pressed()[pygame.K_SPACE]:
+            if pygame.key.get_pressed()[pygame.K_SPACE] or pygame.key.get_pressed()[pygame.K_ESCAPE]:
                 running = False
 
 
@@ -165,15 +165,24 @@ def show_end(screen, score, time_total):
     running = True
     while running:
         screen.fill((0, 0, 0))
+        if score <= 12:
+            font = pygame.font.SysFont(None, 70)
+            text = font.render(f"Meilleur chance la prochaine fois", True, WHITE)
+            screen.blit(text, (10, 170))
+        if score > 12:
+            font = pygame.font.SysFont(None, 140)
+            text = font.render(f"Félicitations!", True, WHITE)
+            screen.blit(text, (80, 140))
         font = pygame.font.SysFont(None, 100)
-        text = font.render(f"Score final:  {score}", True, WHITE)
-        screen.blit(text, (210, 190))
-        font = pygame.font.SysFont(None, 50)
-        text = font.render(f"Temps restant:  {time_total}", True, WHITE)
-        screen.blit(text, (260, 260))
+        text = font.render(f"Score final: {score:02d}/21", True, WHITE)
+        screen.blit(text, (120, 300))
+        font = pygame.font.SysFont(None, 30)
+        text = font.render(f"Temps restant: {time_total}", True, WHITE)
+        screen.blit(text, (280, 370))
         pygame.display.update()
         for event in pygame.event.get():
-            if pygame.key.get_pressed()[pygame.K_SPACE] or pygame.key.get_pressed()[pygame.K_ESCAPE]:
+            if pygame.key.get_pressed()[pygame.K_SPACE] or pygame.key.get_pressed()[pygame.K_RETURN] \
+                    or pygame.key.get_pressed()[pygame.K_ESCAPE] or event.type == pygame.QUIT:
                 running = False
 
 
@@ -182,23 +191,24 @@ def show_start(screen):
     while running:
         screen.fill((0, 0, 0))
         font = pygame.font.SysFont(None, 100)
-        text = font.render(f"Jeux de lasers", True, WHITE)
-        screen.blit(text, (160, 190))
+        text = font.render(f"Réflexion explosive", True, WHITE)
+        screen.blit(text, (85, 190))
         font = pygame.font.SysFont(None, 50)
-        text = font.render(f"appuyer sur espace", True, WHITE)
-        screen.blit(text, (240, 260))
+        text = font.render(f"appuyer sur espace pour commencer", True, WHITE)
+        screen.blit(text, (100, 300))
         pygame.display.update()
         for event in pygame.event.get():
-            if pygame.key.get_pressed()[pygame.K_SPACE]:
+            if pygame.key.get_pressed()[pygame.K_SPACE] or pygame.key.get_pressed()[pygame.K_ESCAPE]:
                 running = False
 
 
 def main():
     show_start(screen)
     level_number = 0
-    level_time = 60
+    level_time = 75
     score_total = 0
     time_total = 0
+    score = 0
     show_level(screen, level_number + 1, score_total)
     level_list = [first_level(), second_level(), fourth_level(), third_level()]
     laser_objects, obstacle_objects, target_objects, player_objects = level_list[level_number]
@@ -221,7 +231,9 @@ def main():
             x.draw(screen)
 
         count = sum([i.is_shot for i in target_objects])
-        draw_score(screen, count)
+        if score < count:
+            score = count
+        draw_score(screen, score)
 
         timer.update(tick)
         timer.draw(screen)
@@ -235,9 +247,10 @@ def main():
                 running = False
 
             if pygame.key.get_pressed()[pygame.K_RETURN]:
-                score_total += count
-                time_total += timer.seconde
+                score_total += score
+                time_total += timer.total_seconde()
                 level_number += 1
+                score = 0
                 if level_number < len(level_list):
                     show_level(screen, level_number + 1, score_total)
                     laser_objects, obstacle_objects, target_objects, player_objects = level_list[level_number]
@@ -251,7 +264,8 @@ def main():
                 print(f"{pos}", end=", ")
 
         if timer.is_done():
-            score_total += count
+            score_total += score
+            score = 0
             time_total += level_time - timer.seconde
             level_number += 1
             show_level(screen, level_number, score_total)
