@@ -56,16 +56,16 @@ class Player:
         key = pygame.key.get_pressed()
 
         dist = 2 * tick / 30
-        rot = 2 * pi / 1000 * tick / 30
+        rot = 2 * pi / 800 * tick / 30
 
         direction = Vector2(0, 0)
         if key[self.down]:
             direction.y += 1
-        elif key[self.up]:
+        if key[self.up]:
             direction.y -= 1
         if key[self.right]:
             direction.x += 1
-        elif key[self.left]:
+        if key[self.left]:
             direction.x -= 1
         if direction.length() > 0:
             direction = direction.normalize() * dist
@@ -84,13 +84,13 @@ class Player:
                 self.y -= direction.y
                 self.triangle()
 
-        if key[self.rotate_left]:
+        if key[self.rotate_left] and not key[self.rotate_right]:
             self.theta -= rot
             self.triangle()
             if self.check_collision(obstacles):
                 self.theta += rot
                 self.triangle()
-        elif key[self.rotate_right]:
+        if key[self.rotate_right] and not key[self.rotate_left]:
             self.theta += rot
             self.triangle()
             if self.check_collision(obstacles):

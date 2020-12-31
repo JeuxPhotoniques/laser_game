@@ -265,9 +265,13 @@ def main():
             score = 0
             time_total += level_time - timer.seconde
             level_number += 1
-            show_level(screen, level_number, score_total)
-            laser_objects, obstacle_objects, target_objects, player_objects = level_list[level_number]
-            timer = Timer(level_time)
+            if level_number < len(level_list):
+                show_level(screen, level_number + 1, score_total)
+                laser_objects, obstacle_objects, target_objects, player_objects = level_list[level_number]
+                timer = Timer(level_time)
+            else:
+                show_end(screen, score_total, time_total)
+                return None
 
 
 if __name__ == '__main__':
