@@ -132,9 +132,9 @@ def fourth_level():
 WHITE = (255, 255, 255)
 
 
-def draw_score(screen, count):
+def draw_score(screen, count, total):
     font = pygame.font.SysFont(None, 25)
-    text = font.render("Score: " + str(count), True, WHITE)
+    text = font.render(f"Score: {str(count)}/{total}", True, WHITE)
     screen.blit(text, (0, 0))
 
 
@@ -207,7 +207,7 @@ def main():
     time_total = 0
     score = 0
     show_level(screen, level_number + 1, score_total)
-    level_list = [first_level(), second_level(), fourth_level(), third_level()]
+    level_list = [second_level(), first_level(), fourth_level(), third_level()]
     laser_objects, obstacle_objects, target_objects, player_objects = level_list[level_number]
     timer = Timer(level_time)
 
@@ -230,7 +230,11 @@ def main():
         count = sum([i.is_shot for i in target_objects])
         if score < count:
             score = count
-        draw_score(screen, score)
+        if level_number == 2:
+            total = 6
+        else:
+            total = 5
+        draw_score(screen, score, total)
 
         timer.update(tick)
         timer.draw(screen)

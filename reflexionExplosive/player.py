@@ -55,8 +55,8 @@ class Player:
     def handle_keys(self, tick, obstacles):
         key = pygame.key.get_pressed()
 
-        dist = 2 * tick / 30
-        rot = 2 * pi / 800 * tick / 30
+        dist = 3 * tick / 30
+        rot = 2 * pi / 750 * tick / 30
 
         direction = Vector2(0, 0)
         if key[self.down]:
