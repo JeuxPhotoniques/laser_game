@@ -267,7 +267,7 @@ def main():
         if timer.is_done():
             score_total += score
             score = 0
-            time_total += level_time - timer.seconde
+            time_total += 0
             level_number += 1
             if level_number < len(level_list):
                 show_level(screen, level_number + 1, score_total)
