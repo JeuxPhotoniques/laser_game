@@ -185,13 +185,16 @@ def show_end(screen, score, time_total):
 def show_start(screen):
     running = True
     while running:
-        screen.fill((0, 0, 0))
-        font = pygame.font.SysFont(None, 100)
-        text = font.render(f"Réflexion explosive", True, WHITE)
-        screen.blit(text, (85, 190))
-        font = pygame.font.SysFont(None, 50)
-        text = font.render(f"appuyer sur espace pour commencer", True, WHITE)
-        screen.blit(text, (100, 300))
+        instructions = pygame.image.load('assets/instructions.png')
+        screen.blit(instructions, (0, 0))
+
+        # screen.fill((0, 0, 0))
+        # font = pygame.font.SysFont(None, 100)
+        # text = font.render(f"Réflexion explosive", True, WHITE)
+        # screen.blit(text, (85, 190))
+        # font = pygame.font.SysFont(None, 50)
+        # text = font.render(f"appuyer sur espace pour commencer", True, WHITE)
+        # screen.blit(text, (100, 300))
         pygame.display.update()
         for event in pygame.event.get():
             if pygame.key.get_pressed()[pygame.K_SPACE] or pygame.key.get_pressed()[pygame.K_ESCAPE]:
